@@ -252,7 +252,7 @@ public class ExportController extends HttpServlet {
 		return responseHeaders;
 	}
 
-	private String getFilename(String name) {
+	private static String getFilename(String name) {
 		name = sanitize(name);
 		return (name != null) ? name : "chart";
 	}

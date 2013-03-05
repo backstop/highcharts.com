@@ -20,8 +20,8 @@ public class SVGConverterException extends Exception {
 	}
 
 	public SVGConverterException(String err) {
-		super(err); // call super class constructor
-		mistake = err; // save message
+		super(err);
+		mistake = err;
 	}
 
 	public String getError() {
