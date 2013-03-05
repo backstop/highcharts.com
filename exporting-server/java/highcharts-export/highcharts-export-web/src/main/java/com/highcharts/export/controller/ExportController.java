@@ -46,8 +46,8 @@ import com.highcharts.export.util.MimeType;
 @RequestMapping("/")
 public class ExportController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Float MAX_WIDTH = 2000.0F;
-	private static final Float MAX_SCALE = 4.0F;
+	private static final float MAX_WIDTH = 2000.0F;
+	private static final float MAX_SCALE = 4.0F;
         private static final String SVG_DOCTYPE = "<?xml version=\"1.0\" standalone=\"no\"?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">";
 	protected static Logger logger = Logger.getLogger("exporter");
 
@@ -78,8 +78,8 @@ public class ExportController extends HttpServlet {
 
 		MimeType mime = getMime(type);
 		filename = getFilename(filename);
-		Float parsedWidth = widthToFloat(width);
-		Float parsedScale = scaleToFloat(scale);
+		Float parsedWidth = valueToFloat(width, 0.0F, MAX_WIDTH);
+		Float parsedScale = valueToFloat(scale, 0.0F, MAX_SCALE);
 		options = sanitize(options);
 		String input;
 
@@ -272,28 +272,15 @@ public class ExportController extends HttpServlet {
 		return null;
 	}
 
-	private static Float widthToFloat(String width) {
-		width = sanitize(width);
-		if (width != null) {
-			Float parsedWidth = Float.valueOf(width);
-			if (parsedWidth.compareTo(MAX_WIDTH) > 0) {
-				return MAX_WIDTH;
+	private static Float valueToFloat(String value, float min, float max) {
+		value = sanitize(value);
+		if (value != null) {
+			Float parsed = Float.valueOf(value);
+			if (parsed.compareTo(max) > 0) {
+				return max;
 			}
-			if (parsedWidth.compareTo(0.0F) > 0) {
-				return parsedWidth;
-			}
-		}
-		return null;
-	}
-
-	private static Float scaleToFloat(String scale) {
-		scale = sanitize(scale);
-		if (scale != null) {
-			Float parsedScale = Float.valueOf(scale);
-			if (parsedScale.compareTo(MAX_SCALE) > 0) {
-				return MAX_SCALE;
-			} else if (parsedScale.compareTo(0.0F) > 0) {
-				return parsedScale;
+			if (parsed.compareTo(min) > 0) {
+				return parsed;
 			}
 		}
 		return null;
